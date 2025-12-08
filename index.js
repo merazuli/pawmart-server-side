@@ -60,6 +60,33 @@ async function run() {
             const result = await petServices.find(query).toArray();
             res.send(result)
         })
+        // put or update data from mongodb 
+        app.put('/update/:id', async (req, res) => {
+            const id = req.params;
+            const data = req.body;
+            const query = { _id: new ObjectId(id) }
+
+            const update = {
+                $set: data
+            }
+            const result = await petServices.updateOne(query, update)
+            res.send(result)
+
+        })
+        // delete data from mongodb 
+
+        app.delete('/delete/:id', async (req, res) => {
+
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) };
+
+            const result = await petServices.deleteOne(query);
+
+            res.send(result);
+        }
+        );
+
 
 
         await client.db("admin").command({ ping: 1 });
