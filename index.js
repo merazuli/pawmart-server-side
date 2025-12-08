@@ -43,6 +43,13 @@ async function run() {
             res.send(result)
         })
 
+        //get single data from db
+
+        app.get('/services/:id', async (req, res) => {
+            const myId = req.params
+            console.log(myId)
+        })
+
 
 
         await client.db("admin").command({ ping: 1 });
