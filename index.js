@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 app.use(cors());
-// app.use(express.json())
+app.use(express.json())
 
 
 const uri = "mongodb+srv://missonscic:NVHhHshbPh2ItNqa@cluster0.gzvuhez.mongodb.net/?appName=Cluster0";
@@ -23,15 +23,28 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
+        await client.connect();
+        const database = client.db('petServices');
+        const petServices = database.collection('services');
 
         // post/save  data on database
         app.post('/services', async (req, res) => {
+            const data = req.body;
+            const date = new Date();
+            data.createdAt = date;
+            const result = await petServices.insertOne(data)
+            res.send(result)
+        })
 
+        //get services from db
+
+        app.get('/services', async (req, res) => {
+            const result = await petServices.find().toArray();
+            res.send(result)
         })
 
 
 
-        await client.connect();
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
