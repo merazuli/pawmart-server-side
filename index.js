@@ -52,7 +52,14 @@ async function run() {
             const result = await petServices.findOne(query)
             res.send(result)
         })
-
+        // get data for email 
+        app.get('/my-services', async (req, res) => {
+            const { email } = req.query
+            // 1st email database er email 
+            const query = { email: email }
+            const result = await petServices.find(query).toArray();
+            res.send(result)
+        })
 
 
         await client.db("admin").command({ ping: 1 });
