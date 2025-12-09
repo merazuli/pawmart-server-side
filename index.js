@@ -26,6 +26,7 @@ async function run() {
         await client.connect();
         const database = client.db('petServices');
         const petServices = database.collection('services');
+        const orderCollection = database.collection('orders');
 
         // post/save  data on database
         app.post('/services', async (req, res) => {
@@ -37,18 +38,6 @@ async function run() {
         })
 
         //get services from db
-
-        // app.get('/services', async (req, res) => {
-        //     const { category } = req.query
-        //     console.log(category)
-        //     const query = {}
-        //     if (category) {
-        //         query.category = category
-        //         const query = { category: category }
-        //     }
-        //     const result = await petServices.find(query).toArray();
-        //     res.send(result)
-        // })
         app.get('/services', async (req, res) => {
             const { category } = req.query;
 
@@ -106,6 +95,17 @@ async function run() {
             res.send(result);
         }
         );
+
+        // orders related api 
+        app.post('/orders', async (req, res) => {
+            const data = req.body
+            const result = await orderCollection.insertOne(data);
+            res.send(result)
+        })
+        app.get('/orders', async (req, res) => {
+            const result = await orderCollection.find().toArray()
+            res.send(result)
+        })
 
 
 
