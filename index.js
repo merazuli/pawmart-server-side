@@ -38,10 +38,31 @@ async function run() {
 
         //get services from db
 
+        // app.get('/services', async (req, res) => {
+        //     const { category } = req.query
+        //     console.log(category)
+        //     const query = {}
+        //     if (category) {
+        //         query.category = category
+        //         const query = { category: category }
+        //     }
+        //     const result = await petServices.find(query).toArray();
+        //     res.send(result)
+        // })
         app.get('/services', async (req, res) => {
-            const result = await petServices.find().toArray();
-            res.send(result)
-        })
+            const { category } = req.query;
+
+            let query = {};  // initially empty
+
+            if (category) {
+                query.category = category;
+            }
+
+            const result = await petServices.find(query).toArray();
+            res.send(result);
+        });
+
+
 
         //get single data from db
 
@@ -77,8 +98,7 @@ async function run() {
 
         app.delete('/delete/:id', async (req, res) => {
 
-            const id = req.params.id;
-            console.log(id)
+            const id = req.params;
             const query = { _id: new ObjectId(id) };
 
             const result = await petServices.deleteOne(query);
